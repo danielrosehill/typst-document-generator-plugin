@@ -1,0 +1,12 @@
+{
+  "name": "typst-document-generator",
+  "version": "0.1.0",
+  "description": "Personal Typst document templates for Daniel Rosehill — five opinionated templates (personal, public, DSR business, DSR client-confidential, personal-confidential) with IBM Plex Sans typography, shared header/footer conventions, and optional AI-assistance disclosure.",
+  "author": {
+    "name": "Daniel Rosehill",
+    "url": "https://github.com/danielrosehill"
+  },
+  "repository": "https://github.com/danielrosehill/typst-document-generator-plugin",
+  "license": "MIT",
+  "keywords": ["typst", "document-generation", "templates", "typography", "personal"]
+}
