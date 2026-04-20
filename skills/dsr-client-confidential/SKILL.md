@@ -70,3 +70,4 @@ This skill looks for `dsr-client-confidential.yaml`. If the user has renamed it 
 - **Logo + confidential badge**: `doc-base` uses the top-left slot for either the header-left text OR the logo, not both. Confidentiality badge wins. If the user wants a DSR logo too, insert it manually on the cover page.
 - Prefer **explicit page breaks** (`#pagebreak()`) between major sections so a printed page can stand alone with the confidential header clearly visible.
 - Include a `= References` or `= Sources` chapter if the doc draws on client-provided material.
+- For slides, structural diagrams, charts, or non-document formats, see `shared/ecosystem.md` or invoke `/typst-document-generator:use-toolkit`.

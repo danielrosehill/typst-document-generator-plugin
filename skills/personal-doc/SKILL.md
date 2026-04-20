@@ -47,3 +47,4 @@ store. See `shared/workspace.md` for the full schema.
 - Prefer real Typst tables over ASCII for tabular data.
 - For technical diagrams, recommend the `nano-tech-diagrams` MCP (NanoBanana 2 via Fal).
 - Don't add per-section dates, version numbers, or revision stamps unless asked.
+- For slides, structural diagrams, charts, or non-document formats, see `shared/ecosystem.md` or invoke `/typst-document-generator:use-toolkit`.

@@ -88,9 +88,25 @@ Either:
 
 `shared/styles.typ` is the only file that meaningfully encodes the visual style (palette, fonts, margins, heading shape, cover layout). Fork and edit that one file if you want a different look — templates don't need to change.
 
+## Ecosystem toolkit
+
+For jobs the five document templates don't cover — slides, structural
+diagrams, scientific plots, formal letters/CVs/invoices, programmatic
+rendering — the plugin bundles a curated reference of Typst ecosystem
+libraries in [`shared/ecosystem.md`](shared/ecosystem.md):
+
+- **polylux / touying** — presentation slides
+- **fletcher** — vector diagrams (nodes, arrows, commutative diagrams)
+- **lilaq** — scientific plotting inside Typst
+- **typst/templates** — official letter / CV / invoice / paper gallery
+- **typst-py** — Python bindings for programmatic rendering
+
+The `use-toolkit` skill picks the right library for a described need and
+wires it into the current document.
+
 ## Related
 
-- `nano-tech-diagrams` MCP (NanoBanana 2 via Fal) pairs well with these templates for technical diagrams.
+- `nano-tech-diagrams` MCP (NanoBanana 2 via Fal) pairs well with these templates for illustrated/organic technical diagrams (vs. fletcher's exact structural ones).
 
 ## License
 

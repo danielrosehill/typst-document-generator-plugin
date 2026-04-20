@@ -55,3 +55,4 @@ Thin renderer — see `shared/workspace.md` for the data-store schema.
 - Cite sources inline or in a `= References` chapter.
 - For technical diagrams, use the `nano-tech-diagrams` MCP (NanoBanana 2 via Fal).
 - Avoid internal shorthand, "the brief", or references to files the reader won't have.
+- For slides, structural diagrams, charts, or non-document formats, see `shared/ecosystem.md` or invoke `/typst-document-generator:use-toolkit`.

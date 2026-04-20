@@ -59,3 +59,4 @@ Thin renderer — see `shared/workspace.md` for the data-store schema.
 
 - For the user's eyes — skip outward-facing polish if they just want the content captured. Don't over-invest in cover design.
 - If the document will be printed, remind the user the header/footer will appear on every printed page.
+- For slides, structural diagrams, charts, or non-document formats, see `shared/ecosystem.md` or invoke `/typst-document-generator:use-toolkit`.

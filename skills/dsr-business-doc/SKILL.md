@@ -54,3 +54,4 @@ This skill looks for `dsr-business-doc.yaml` by default. If the user's business 
 - Use real Typst tables for pricing, scope, or comparison matrices.
 - For diagrams, use the `nano-tech-diagrams` MCP.
 - No boilerplate legal text in the main body unless asked.
+- For slides, structural diagrams, charts, or non-document formats, see `shared/ecosystem.md` or invoke `/typst-document-generator:use-toolkit`.
