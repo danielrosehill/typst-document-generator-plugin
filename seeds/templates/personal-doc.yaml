@@ -1,0 +1,22 @@
+name: personal-doc
+label: "Personal Documentation"
+description: >
+  Unpublished personal documents — notes, research writeups, private reports
+  that are not public-facing and not confidential.
+
+header:
+  left: null
+  bold: false
+  logo: false
+
+footer:
+  extra_lines: []
+
+cover:
+  show_confidentiality_block: false
+
+ai_disclosure:
+  default_placement: "inline"
+
+notes: |
+  Simplest template. No external branding, no confidentiality marks.

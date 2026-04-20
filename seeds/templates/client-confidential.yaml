@@ -1,0 +1,41 @@
+name: client-confidential
+label: "Client Confidential"
+description: >
+  Client deliverables that must be marked confidential — proposals, technical
+  reports, audits, materials delivered under engagement.
+
+requires:
+  business: true
+
+header:
+  left: "CONFIDENTIAL — {client}"
+  bold: true
+  logo: false
+
+footer:
+  extra_lines:
+    - type: link
+      url: "https://{business.site}"
+      text: "{business.site}"
+    - type: text
+      text: "Confidential — {client}"
+
+cover:
+  show_confidentiality_block: true
+  confidentiality_text: >
+    This document contains confidential and proprietary information prepared
+    by {business.name} for {client}. It may not be reproduced, distributed,
+    or disclosed to third parties without written permission from
+    {business.name} and the client.
+
+ai_disclosure:
+  default_placement: "inline"
+
+variables:
+  client:
+    prompt: "Client name (appears in header, footer, confidentiality notice)"
+    required: true
+
+notes: |
+  Client name is REQUIRED. Confirm AI-disclosure client awareness before
+  generating. Default filename: YYYY-MM-DD-{slug}-confidential.typ.

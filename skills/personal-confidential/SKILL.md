@@ -1,79 +1,61 @@
 ---
 name: personal-confidential
-description: Generate a Typst document using Daniel's personal-confidential template — "PRIVILEGED & CONFIDENTIAL" bold header, page number top-right, IBM Plex Sans. Use when the user is producing private personal documents (personal finance, health, legal correspondence, sensitive notes) that are for his eyes only and must not be shared.
+description: Generate a Typst document using the user's `personal-confidential` template — bold "PRIVILEGED & CONFIDENTIAL" header, page number top-right, confidentiality notice on the cover naming the user. Use for private personal documents (personal finance, health, legal correspondence, sensitive notes) that are for the user's eyes only and must not be shared. Not for business-client work.
 ---
 
 # Personal Confidential Template
 
-Use for **Daniel's own private documents that must not be shared** — personal finance records, health documentation, legal correspondence, sensitive personal notes, things he'd want marked clearly so if the PDF is ever mis-shared it's immediately obvious.
+Thin renderer — see `shared/workspace.md` for the data-store schema.
 
-Not for DSR Holdings client work — use `dsr-client-confidential` for that.
+> **Typst must be installed (`which typst`).**
 
-> **Typst is already installed at `/usr/local/bin/typst` (v0.13+).** Do not check, do not try to install. Just compile.
+## Preflight
 
-## What this template produces
-
-- **Header** (every page): **PRIVILEGED & CONFIDENTIAL** in bold amber top-left, page number top-right.
-- **Footer** (every page): `Page N · By: Daniel Rosehill · dd-mm-yy`.
-- **Cover**: title, optional subtitle, author, date, plus a prominent privilege notice block.
-- **TOC**: chapter-level (depth 1).
-- **Typography**: IBM Plex Sans body, IBM Plex Serif headings, teal-700 accents.
-
-## Template scaffold
-
-```typst
-#import "./styles.typ": doc-base, ai-disclosure-block
-
-#show: doc-base.with(
-  title: "{{TITLE}}",
-  subtitle: "{{OPTIONAL SUBTITLE OR none}}",
-  header-left: "PRIVILEGED & CONFIDENTIAL",
-  header-bold: true,
-)
-
-#block(
-  fill: rgb("#FEF3C7"),
-  stroke: 0.5pt + rgb("#B45309"),
-  inset: 12pt,
-  radius: 3pt,
-  width: 100%,
-)[
-  #set text(size: 10pt)
-  #text(weight: "bold", fill: rgb("#B45309"))[Privileged and Confidential] \
-  This document contains private personal information. It is intended solely
-  for Daniel Rosehill and is not to be distributed, copied, or disclosed to
-  any third party without explicit authorisation.
-]
-
-= Section
-
-Private content.
-```
-
-## Optional: AI-assistance disclosure
-
-Personal-confidential documents rarely need AI disclosure (no external audience), but if the user wants to track it for his own records, use footer placement:
-
-```typst
-ai-disclosure: ai-disclosure-block(
-  tool: "Claude Opus 4.6",
-  role: "structured transcript / first-pass draft",
-  human: "Daniel Rosehill — full review",
-),
-ai-disclosure-in-footer: true,
-```
+1. `profile.yaml` exists → else prompt onboarding.
+2. `templates/personal-confidential.yaml` exists → else offer to re-seed.
+3. Load profile + template YAML.
 
 ## Workflow
 
-1. Ask the user for: title, optional subtitle, output path.
-2. Ask if AI-assisted (uncommon for personal-confidential; if yes, default to footer placement).
-3. Copy `shared/styles.typ` to the target directory.
-4. Write the `.typ` file.
-5. Compile and verify — check the PDF header shows PRIVILEGED & CONFIDENTIAL prominently in bold amber.
-6. Report the PDF path.
+1. Ask for: title, optional subtitle, output path.
+2. Default output location: under `~/Documents/` or `~/personal/` (ask which). **Never** a public repo or any synced folder that might be shared.
+3. Ask if AI-assisted. Uncommon for personal-confidential; if yes, default placement: **footer**.
+4. Copy `${CLAUDE_PLUGIN_ROOT}/shared/styles.typ` next to the output `.typ`.
+5. Generate the `.typ` scaffold:
+
+   ```typst
+   #import "./styles.typ": doc-base, ai-disclosure-block
+
+   #show: doc-base.with(
+     title: "{TITLE}",
+     subtitle: {SUBTITLE OR none},
+     author: "{author.name}",
+     header-left: "PRIVILEGED & CONFIDENTIAL",
+     header-bold: true,
+     // optional ai-disclosure (default footer placement)
+   )
+
+   #block(
+     fill: rgb("#FEF3C7"),
+     stroke: 0.5pt + rgb("#B45309"),
+     inset: 12pt,
+     radius: 3pt,
+     width: 100%,
+   )[
+     #set text(size: 10pt)
+     #text(weight: "bold", fill: rgb("#B45309"))[Privileged and Confidential] \
+     This document contains private personal information. It is intended solely
+     for {author.name} and is not to be distributed, copied, or disclosed to
+     any third party without explicit authorisation.
+   ]
+
+   = Section
+   ```
+
+6. Compile and surface errors verbatim on failure.
+7. Report the PDF path.
 
 ## Style reminders
 
-- These are **for Daniel's eyes**. Skip the outward-facing polish if he just wants the content captured — don't over-invest in cover design.
-- Default output location: somewhere under `~/Documents/` or `~/personal/` (ask) — **never** commit to a public repo.
+- For the user's eyes — skip outward-facing polish if they just want the content captured. Don't over-invest in cover design.
 - If the document will be printed, remind the user the header/footer will appear on every printed page.

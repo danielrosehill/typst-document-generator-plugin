@@ -1,0 +1,30 @@
+name: business-doc
+label: "Business — General"
+description: >
+  General business documents (not client-specific, not confidential).
+  Proposals, company whitepapers, external reports, service descriptions.
+
+requires:
+  business: true
+
+header:
+  left: null
+  bold: false
+  logo: true
+  logo_width: "2.4cm"
+
+footer:
+  extra_lines:
+    - type: link
+      url: "https://{business.site}"
+      text: "{business.site}"
+
+cover:
+  show_confidentiality_block: false
+
+ai_disclosure:
+  default_placement: "footer"
+
+notes: |
+  Formal but slightly creative. For client-confidential work use the
+  client-confidential template instead.

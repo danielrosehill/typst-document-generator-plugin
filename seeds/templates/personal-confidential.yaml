@@ -1,0 +1,27 @@
+name: personal-confidential
+label: "Personal Confidential"
+description: >
+  Private personal documents that must not be shared — personal finance,
+  health, legal correspondence, sensitive notes.
+
+header:
+  left: "PRIVILEGED & CONFIDENTIAL"
+  bold: true
+  logo: false
+
+footer:
+  extra_lines: []
+
+cover:
+  show_confidentiality_block: true
+  confidentiality_text: >
+    This document contains private personal information. It is intended
+    solely for {author.name} and is not to be distributed, copied, or
+    disclosed to any third party without explicit authorisation.
+
+ai_disclosure:
+  default_placement: "footer"
+
+notes: |
+  For the user's eyes only. Skip outward polish if they just want the
+  content captured. Never commit to a public repo.

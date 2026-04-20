@@ -1,0 +1,32 @@
+name: public-doc
+label: "Public-Facing Documentation"
+description: >
+  Documents the user intends to publish — GitHub READMEs-as-PDF, open
+  writeups, public reports, anything going out under their personal brand.
+
+header:
+  left: null
+  bold: false
+  logo: false
+
+footer:
+  extra_lines:
+    - type: link
+      url: "https://{author.personal_site}"
+      text: "{author.personal_site}"
+    - type: text
+      text: "Licensed under {license}"
+
+cover:
+  show_confidentiality_block: false
+
+ai_disclosure:
+  default_placement: "inline"
+
+variables:
+  license:
+    prompt: "License (default pulled from profile.default_license)"
+    default: "{profile.default_license}"
+
+notes: |
+  Strongly prefer inline AI disclosure on public docs.

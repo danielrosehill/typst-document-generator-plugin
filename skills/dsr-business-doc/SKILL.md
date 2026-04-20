@@ -1,89 +1,56 @@
 ---
 name: dsr-business-doc
-description: Generate a Typst document using the DSR Holdings general business template — DSR logo in header, footer link to dsrholdings.cloud, IBM Plex Sans typography. Use when the user is producing general business documentation under the DSR Holdings brand (proposals, whitepapers, external reports) that is not client-confidential.
+description: Generate a Typst document using the user's business template (seeded as `dsr-business-doc.yaml` for DSR Holdings users, or `<business-slug>-business-doc.yaml` for others). Business logo in header, footer link to `{business.site}`. Use for general business documents that are not client-specific and not confidential (proposals, whitepapers, external reports). Requires profile.business to be populated.
 ---
 
-# DSR Holdings — General Business Template
+# Business — General Template
 
-Use for **general DSR Holdings business documents** — not client-specific, not confidential. Proposals, public-facing company whitepapers, external reports, service descriptions.
+Thin renderer — see `shared/workspace.md` for the data-store schema.
 
-For client-confidential work, use `dsr-client-confidential` instead.
+This skill looks for `dsr-business-doc.yaml` by default. If the user's business isn't DSR Holdings and they onboarded with a different slug, ask which template to use (listing the ones under `templates/` whose `requires.business: true` and which are not client-confidential).
 
-> **Typst is already installed at `/usr/local/bin/typst` (v0.13+).** Do not check, do not try to install. Just compile.
+> **Typst must be installed (`which typst`).**
 
-## What this template produces
+## Preflight
 
-- **Header** (every page): DSR Holdings logo top-left, page number top-right.
-- **Footer** (every page): `Page N · By: Daniel Rosehill · dd-mm-yy · dsrholdings.cloud`.
-- **Cover**: title, optional subtitle, author, date.
-- **TOC**: chapter-level (depth 1).
-- **Typography**: IBM Plex Sans body, IBM Plex Serif headings, teal-700 accents.
-
-## Logo path
-
-The DSR Holdings header logo lives at:
-
-```
-~/repos/github/my-repos/DSR-Holdings-Cloud/website/public/dsr-holdings-header-logo.png
-```
-
-Ask the user to confirm the path — they may have a newer logo or want to use a specific variant (header-logo vs circle-logo vs full logo). If no override is given, use the header-logo.png above. **Copy the logo file next to the `.typ` file** (or into a `lib/` subdir) so Typst can resolve it portably.
-
-## Template scaffold
-
-```typst
-#import "./styles.typ": doc-base, ai-disclosure-block
-
-#show: doc-base.with(
-  title: "{{TITLE}}",
-  subtitle: "{{OPTIONAL SUBTITLE OR none}}",
-  logo-path: "./dsr-holdings-header-logo.png",
-  logo-width: 2.4cm,
-  footer-lines: (
-    link("https://dsrholdings.cloud")[dsrholdings.cloud],
-  ),
-)
-
-= Overview
-
-Business context.
-
-= Main Content
-
-Body.
-```
-
-## Optional: AI-assistance disclosure
-
-```typst
-#show: doc-base.with(
-  title: "{{TITLE}}",
-  logo-path: "./dsr-holdings-header-logo.png",
-  footer-lines: (link("https://dsrholdings.cloud")[dsrholdings.cloud],),
-  ai-disclosure: ai-disclosure-block(
-    tool: "Claude Opus 4.6",
-    role: "drafting support",
-    human: "DSR Holdings — scope, review, sign-off",
-  ),
-  ai-disclosure-in-footer: true,  // business docs: footer is usually less intrusive
-)
-```
-
-For business docs, default disclosure placement to **footer** (less intrusive) unless the user prefers inline.
+1. `profile.yaml` exists → else prompt onboarding.
+2. `profile.business` is not null → else stop and explain (this template needs business context; re-run onboarding to add it).
+3. Verify `profile.business.logo_path` exists on disk → if missing, ask for a new path or skip the logo.
+4. Load profile + template YAML.
 
 ## Workflow
 
-1. Ask the user for: title, optional subtitle, output path.
-2. Confirm logo path (default: `~/repos/github/my-repos/DSR-Holdings-Cloud/website/public/dsr-holdings-header-logo.png`).
-3. Ask if AI-assisted. Default placement: footer.
-4. Copy `shared/styles.typ` and the logo PNG to the target directory.
-5. Write the `.typ` file.
-6. Compile and verify.
-7. Report the PDF path.
+1. Ask for: title, optional subtitle, output path.
+2. Ask if AI-assisted. Default placement: **footer** (less intrusive for business docs).
+3. Copy `${CLAUDE_PLUGIN_ROOT}/shared/styles.typ` and the logo file next to the output `.typ`. Use a local filename (e.g. `./logo.png`) in the scaffold so the output is portable.
+4. Generate the `.typ` scaffold:
+
+   ```typst
+   #import "./styles.typ": doc-base, ai-disclosure-block
+
+   #show: doc-base.with(
+     title: "{TITLE}",
+     subtitle: {SUBTITLE OR none},
+     author: "{author.name}",
+     logo-path: "./logo.png",
+     logo-width: 2.4cm,
+     footer-lines: (
+       link("https://{business.site}")[{business.site}],
+     ),
+     // optional ai-disclosure (default footer placement)
+   )
+
+   = Overview
+
+   Business context.
+   ```
+
+5. Compile and surface errors verbatim on failure.
+6. Report the PDF path.
 
 ## Style reminders
 
-- Business docs are **formal but still slightly creative** — the palette/typography already covers this. Don't over-correct toward bland corporate.
-- Prefer real Typst tables for any pricing, scope, or comparison matrices.
-- For diagrams (architecture, workflow, system), use the `nano-tech-diagrams` MCP — the slightly creative NanoBanana 2 style fits DSR's brand voice.
-- Avoid boilerplate legal text in the main body unless the user asks — no "all trademarks are property of their owners" unless requested.
+- Formal but slightly creative — don't over-correct toward bland corporate.
+- Use real Typst tables for pricing, scope, or comparison matrices.
+- For diagrams, use the `nano-tech-diagrams` MCP.
+- No boilerplate legal text in the main body unless asked.
