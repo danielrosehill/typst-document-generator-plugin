@@ -1,6 +1,6 @@
 ---
 name: onboard
-description: First-run onboarding for the typst-document-generator plugin. Interview the user about their identity (name, email, personal site), optional business context (name, site, logo), and default preferences (license, output directory), then seed the template library with the five built-in templates (personal-doc, public-doc, business-doc, client-confidential, personal-confidential) personalized to the user's answers. Writes everything to ~/.claude/plugins-data/typst-document-generator/. Use this before any other typst-document-generator skill, or when the user says "set up typst templates", "onboard typst", or wants to reset/reseed their templates.
+description: First-run onboarding for the typst-document-generator plugin. Interview the user about their identity (name, email, personal site), optional business context (name, site, logo), and default preferences (license, output directory), then seed the template library with the six built-in templates (personal-doc, public-doc, business-doc, client-confidential, personal-confidential, briefing) personalized to the user's answers. Writes everything to ~/.claude/plugins-data/typst-document-generator/. Use this before any other typst-document-generator skill, or when the user says "set up typst templates", "onboard typst", or wants to reset/reseed their templates.
 ---
 
 # typst-document-generator: onboard
@@ -34,7 +34,7 @@ Check for `~/.claude/plugins-data/typst-document-generator/profile.yaml`.
 - **Exists** — offer three paths:
   - *Update profile* (overwrite identity/business/defaults; keep templates).
   - *Add custom template* (skip to step 5).
-  - *Reseed built-in templates* (re-copy the five defaults; confirm overwrite for any that already exist).
+  - *Reseed built-in templates* (re-copy the six defaults; confirm overwrite for any that already exist).
   - *Full reset* (back up existing files with `.bak-YYYYMMDD-HHMMSS` then start fresh).
 
 - **Missing** — proceed to step 2.
@@ -70,13 +70,14 @@ Write to `~/.claude/plugins-data/typst-document-generator/profile.yaml` with `ca
 
 ### 6. Seed built-in templates
 
-Copy these five template YAMLs from the plugin's install dir (`${CLAUDE_PLUGIN_ROOT}/seeds/templates/` — see note below) into `~/.claude/plugins-data/typst-document-generator/templates/`:
+Copy these six template YAMLs from the plugin's install dir (`${CLAUDE_PLUGIN_ROOT}/seeds/templates/` — see note below) into `~/.claude/plugins-data/typst-document-generator/templates/`:
 
 - `personal-doc.yaml`
 - `public-doc.yaml`
 - `dsr-business-doc.yaml` (rename to `<business-slug>-business-doc.yaml` if business isn't DSR Holdings; update `name:` inside to match)
 - `dsr-client-confidential.yaml` (same rename logic → `<business-slug>-client-confidential.yaml`)
 - `personal-confidential.yaml`
+- `briefing.yaml`
 
 If the user said "no business", skip the two business templates.
 
@@ -94,7 +95,7 @@ Print:
 - Data store path.
 - Profile summary (name, business status, default license).
 - List of templates written.
-- List of sibling skills the user can now invoke (`personal-doc`, `public-doc`, `dsr-business-doc`, `dsr-client-confidential`, `personal-confidential`, plus any custom ones as they're added).
+- List of sibling skills the user can now invoke (`personal-doc`, `public-doc`, `dsr-business-doc`, `dsr-client-confidential`, `personal-confidential`, `briefing`, plus any custom ones as they're added).
 
 ## Re-running
 
@@ -102,6 +103,6 @@ Re-running is safe — it always offers the three update paths from step 1 rathe
 
 ## Tips
 
-- Users with no business can still use `personal-doc`, `public-doc`, and `personal-confidential` — the other two require business context.
+- Users with no business can still use `personal-doc`, `public-doc`, `personal-confidential` and `briefing` — the other two require business context.
 - If the user changes their personal site or business name later, a `profile.yaml` edit is enough; no template regeneration needed because templates reference tokens, not literals.
 - Custom template ideas worth suggesting: a "meeting notes" template, a "client pitch" variant with different footer, a "technical RFC" template with dense TOC (`toc-depth: 2`).

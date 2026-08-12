@@ -1,12 +1,18 @@
 {
   "name": "typst-document-generator",
-  "version": "0.3.0",
-  "description": "Opinionated Typst document templates as a Claude Code plugin. Ships five seed templates (personal, public, business, client-confidential, personal-confidential) with IBM Plex Sans typography and shared header/footer conventions. Identity and templates live in a user data store at ~/.claude/plugins-data/typst-document-generator/, populated via an interactive onboarding skill — no personal data is baked into the plugin.",
+  "version": "0.4.0",
+  "description": "Opinionated Typst document templates as a Claude Code plugin. Ships six seed templates (personal, public, business, client-confidential, personal-confidential, briefing) with IBM Plex Sans typography and shared header/footer conventions. Identity and templates live in a user data store at ~/.claude/plugins-data/typst-document-generator/, populated via an interactive onboarding skill — no personal data is baked into the plugin.",
   "author": {
     "name": "Daniel Rosehill",
     "url": "https://github.com/danielrosehill"
   },
   "repository": "https://github.com/danielrosehill/typst-document-generator-plugin",
   "license": "MIT",
-  "keywords": ["typst", "document-generation", "templates", "typography", "personal"]
+  "keywords": [
+    "typst",
+    "document-generation",
+    "templates",
+    "typography",
+    "personal"
+  ]
 }

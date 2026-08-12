@@ -12,6 +12,7 @@ outside this plugin, under:
 │   ├── dsr-business-doc.yaml
 │   ├── dsr-client-confidential.yaml
 │   ├── personal-confidential.yaml
+│   ├── briefing.yaml
 │   └── <user-custom>.yaml       # user-defined templates
 └── assets/                      # logos, reference images, etc.
 ```
@@ -46,6 +47,7 @@ captured_at: "YYYY-MM-DD"
 name: kebab-case-identifier          # must match filename stem
 label: "Human-Readable Label"
 description: "One-line description for the skill router."
+base: doc-base | briefing-base       # optional; defaults to doc-base
 
 requires:
   business: false                    # true = profile.business must be populated
@@ -90,13 +92,14 @@ When a template references `{author.name}`, `{business.site}`, `{license}`,
 
 ## Rendering contract
 
-All five built-in skills (and any future user-defined ones) follow:
+All built-in skills (and any future user-defined ones) follow:
 
 1. Load `profile.yaml`. If missing → tell the user to run `/typst-document-generator:onboard`.
 2. Load `templates/<template>.yaml`.
 3. If `requires.business` is true and profile has no business → stop, explain.
 4. Collect any template `variables:` from the user.
-5. Resolve tokens into `doc-base.with(...)` keyword args.
+5. Resolve tokens into `<base>.with(...)` keyword args, where `<base>` is the
+   template's `base:` key (default `doc-base`).
 6. Copy `shared/styles.typ` (from the plugin install dir) next to the output
    `.typ` file, plus any logo referenced by the template.
 7. Write the `.typ` scaffold, compile with `typst compile`, report PDF path.

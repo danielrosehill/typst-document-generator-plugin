@@ -9,7 +9,7 @@ Reference material lives in `shared/ecosystem.md` — read it before recommendin
 
 ## When to use
 
-Trigger when the user's need goes beyond this plugin's five document
+Trigger when the user's need goes beyond this plugin's six document
 templates:
 
 - "I want to make slides in Typst"

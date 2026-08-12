@@ -7,13 +7,13 @@ Opinionated Typst document templates, packaged as a Claude Code plugin.
 A thin rendering layer over Typst that:
 
 - Ships a shared visual style (IBM Plex Sans, teal-700 accents, amber confidentiality markers) in `shared/styles.typ`.
-- Ships five **seed templates** covering common document kinds — personal, public, business-general, client-confidential, personal-confidential.
+- Ships six **seed templates** covering common document kinds — personal, public, business-general, client-confidential, personal-confidential, and briefing.
 - On first run, an `onboard` skill interviews you for identity (name, email, personal site) and optional business context (name, site, logo), then seeds your personal template library under `~/.claude/plugins-data/typst-document-generator/`.
 - Each generator skill is a thin renderer that reads your profile + template YAML and emits a `.typ` file + compiled PDF.
 
 **The plugin itself contains no personal data.** Everything is resolved at render time from your local data store.
 
-## The five seed templates
+## The six seed templates
 
 | Template | Use for | Header | Footer |
 |---|---|---|---|
@@ -22,6 +22,12 @@ A thin rendering layer over Typst that:
 | `business-doc` | General business documents | Business logo + page number | Page · By · date · {business site} |
 | `client-confidential` | Client deliverables | **CONFIDENTIAL — {client}** (bold) + page number | Page · By · date · {business site} · Confidential — {client} |
 | `personal-confidential` | Private personal docs (finance, health, legal) | **PRIVILEGED & CONFIDENTIAL** (bold) + page number | Page · By: {name} · date |
+| `briefing` | Printable field sheets — shopping lists, trip plans, run sheets | *(none — marking is watermarked)* | Page · By: {name} · date · **{marking}** |
+
+`briefing` is the odd one out: it renders through `briefing-base` rather than
+`doc-base`, and deliberately has no TOC and no chapter page-breaks. It is for
+documents held in one hand in a shop or a car, not read at a desk. Everything
+below applies to the other five.
 
 All templates share:
 
@@ -59,6 +65,7 @@ This writes your profile and seeds the template library. Without it, the generat
 │   ├── <business>-business-doc.yaml
 │   ├── <business>-client-confidential.yaml
 │   ├── personal-confidential.yaml
+│   ├── briefing.yaml
 │   └── <your-custom>.yaml
 └── assets/                  # logos, images, custom fonts
 ```
@@ -84,13 +91,23 @@ Either:
 - Re-run `/typst-document-generator:onboard` and choose "Add custom template", or
 - Hand-write a YAML in `~/.claude/plugins-data/typst-document-generator/templates/` following the schema in `shared/workspace.md`.
 
+## Adding a profile
+
+Run `/typst-document-generator:add-profile`. It handles the four edits a profile
+needs — style wrapper, seed YAML, generator skill, README registration — and
+checks the profile does not already exist first.
+
+Most new profiles need no new style code: a new YAML with different
+header/footer/cover values over the existing `doc-base` is enough. Only write a
+new `<name>-base` when the page architecture genuinely differs.
+
 ## Customising the visual style
 
 `shared/styles.typ` is the only file that meaningfully encodes the visual style (palette, fonts, margins, heading shape, cover layout). Fork and edit that one file if you want a different look — templates don't need to change.
 
 ## Ecosystem toolkit
 
-For jobs the five document templates don't cover — slides, structural
+For jobs the six document templates don't cover — slides, structural
 diagrams, scientific plots, formal letters/CVs/invoices, programmatic
 rendering — the plugin bundles a curated reference of Typst ecosystem
 libraries in [`shared/ecosystem.md`](shared/ecosystem.md):

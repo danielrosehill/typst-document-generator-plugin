@@ -1,0 +1,70 @@
+name: briefing
+label: "Briefing / Field Sheet"
+description: >
+  Single-subject working document meant to be printed and carried — shopping
+  lists, trip plans, run sheets, field checklists, site visit sheets. Dark
+  full-bleed cover, a classification marking watermarked on every page, and a
+  checkbox-first body.
+
+# Renders through `briefing-base` in shared/styles.typ, NOT `doc-base`. It is
+# the only template that does. See the `base:` note in shared/workspace.md.
+base: briefing-base
+
+requires:
+  business: false
+
+# briefing-base draws no page header — the marking appears as the watermark and
+# in the footer centre instead, so it survives photocopying without a header.
+header:
+  left: null
+  bold: false
+  logo: false
+
+footer:
+  extra_lines: []
+
+cover:
+  show_confidentiality_block: false
+
+ai_disclosure:
+  default_placement: "footer"
+
+variables:
+  marking:
+    prompt: "Classification marking — watermarked on every page and shown in the footer"
+    required: false
+    default: "NON-CONFIDENTIAL"
+  eyebrow:
+    prompt: "Small tracked line above the cover title, e.g. 'LOGISTICS · PROCUREMENT · AUGUST 2026'"
+    required: false
+  accent_title:
+    prompt: "Second cover title line, rendered in the accent colour"
+    required: false
+  meta:
+    prompt: "Up to four cover metadata pairs, e.g. Waist=36, Budget=$378, Stops=3"
+    required: false
+
+notes: |
+  Reach for this instead of `personal-doc` when the output is going to be held
+  in one hand in a shop or a car rather than read at a desk. The tells are:
+  checkboxes, quantities, opening hours, addresses, a running total.
+
+  Body helpers exported alongside `briefing-base` — use them rather than
+  hand-rolling equivalents, because they are what makes the profile consistent:
+
+    item(qty, what, note: none, price: none)   checklist line; qty: none = plain
+    note-block(body, color: ...)               rule-marked warning / constraint
+    panel(title, body)                         filled box — totals, summaries
+    stop(num, name, addr, hours, phone: none)  numbered destination heading
+
+  Deliberately has NO table of contents and no chapter page-breaks. If the
+  document is long enough to want a TOC, it is the wrong template — use
+  `personal-doc`.
+
+  Keep the marking short. It is laid out at the page width before being
+  rotated, so anything much past 16 characters has to shrink to stay on one
+  line. "NON-CONFIDENTIAL" is already at the limit at the default 44pt.
+
+  Printing: the cover is full-bleed dark. On a non-borderless printer it comes
+  out with a white edge, which looks intentional. On an inkjet it is ink-heavy —
+  fine on an EcoTank, worth a warning on a cartridge printer.

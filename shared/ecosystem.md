@@ -171,7 +171,7 @@ minimal example, and install step into the user's current work.
 - **Purpose**: Official collection of starter templates — letters, CVs,
   invoices, academic papers, slides. Useful as a reference library.
 - **Reach for it when**: the user wants a one-off doc in a style this
-  plugin's five seeds don't cover (e.g. formal letter, invoice, IEEE-style
+  plugin's six seeds don't cover (e.g. formal letter, invoice, IEEE-style
   paper) and doesn't want to build from scratch.
 - **Install**: templates are typically imported from Typst Universe
   (`@preview/<template-name>`) or can be copied from the repo directly.
