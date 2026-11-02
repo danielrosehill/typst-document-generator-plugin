@@ -1,19 +1,20 @@
 # Typst Document Generator
 
-Opinionated Typst document templates, packaged as a Claude Code plugin.
+Opinionated Typst document templates as agent skills: a public, generic set of formats, plus a private overlay folder where your own formats (your letterhead, your business, your house style) live without forking the plugin.
 
 ## What this plugin is
 
 A thin rendering layer over Typst that:
 
 - Ships a shared visual style (IBM Plex Sans, teal-700 accents, amber confidentiality markers) in `shared/styles.typ`.
-- Ships six **seed templates** covering common document kinds — personal, public, business-general, client-confidential, personal-confidential, and briefing.
-- On first run, an `onboard` skill interviews you for identity (name, email, personal site) and optional business context (name, site, logo), then seeds your personal template library under `~/.claude/plugins-data/typst-document-generator/`.
-- Each generator skill is a thin renderer that reads your profile + template YAML and emits a `.typ` file + compiled PDF.
+- Ships six **built-in templates** covering common document kinds — personal, public, business-general, client-confidential, personal-confidential, and briefing.
+- Ships a standalone `screenplay` format (Courier 12, spec-script layout).
+- On first run, an `onboard` skill interviews you for identity (name, email, personal site) and optional business context (name, site, logo) and writes them to your **private overlay** folder.
+- Each generator skill is a thin renderer that reads your profile and the template YAML (your overlay copy first, then the built-in) and emits a `.typ` file and compiled PDF. `render` does the same for any template, including ones only you have.
 
 **The plugin itself contains no personal data.** Everything is resolved at render time from your local data store.
 
-## The six seed templates
+## The built-in templates
 
 | Template | Use for | Header | Footer |
 |---|---|---|---|
@@ -55,6 +56,7 @@ All templates share:
 ## Installation
 
 ```
+/plugin marketplace add danielrosehill/Claude-Code-Plugins
 /plugin install typst-document-generator@danielrosehill
 ```
 
@@ -66,27 +68,37 @@ After install, run the onboarding skill:
 /typst-document-generator:onboard
 ```
 
-This writes your profile and seeds the template library. Without it, the generator skills will refuse to run.
+This writes your profile to the overlay. The built-in templates are read straight from the plugin, so nothing is copied. Skills that put your name or business on the page need the profile; `screenplay` doesn't.
 
-## Data store layout
+## Public plugin, private formats
+
+The plugin holds only generic layouts. Everything that's yours lives in an
+overlay folder outside it, which survives plugin updates and can be its own
+private git repo:
 
 ```
-~/.claude/plugins-data/typst-document-generator/
-├── profile.yaml             # identity, business, defaults
-├── templates/
-│   ├── personal-doc.yaml
-│   ├── public-doc.yaml
-│   ├── <business>-business-doc.yaml
-│   ├── <business>-client-confidential.yaml
-│   ├── personal-confidential.yaml
-│   ├── briefing.yaml
-│   └── <your-custom>.yaml
-└── assets/                  # logos, images, custom fonts
+~/.claude-user-data/typst-document-generator/    # or $TYPST_DOCGEN_HOME
+├── profile.yaml        # name, email, site, business, logo path, defaults
+├── templates/          # your formats; same name as a built-in = your override
+├── bases/              # your own Typst wrappers (a house style), optional
+└── assets/             # logos and images
 ```
 
-Full schema in [`shared/workspace.md`](shared/workspace.md).
+- **Your own format** is a YAML in `templates/`, with `notes:` holding its
+  instructions and `triggers:` naming the phrases that pick it. No skill and no
+  fork needed: `/typst-document-generator:render` lists and renders it.
+- **Your own look** is a self-contained `.typ` in `bases/`, which the template names via `base_file:`.
+- **Tweaking a built-in** means copying its YAML into `templates/` and editing
+  the copy. Your copy wins, and untouched built-ins keep getting fixes.
+- **Where the folder is:** `scripts/paths.sh` prints it and the rule that
+  picked it. The order is `$TYPST_DOCGEN_HOME` → `$CLAUDE_USER_DATA/typst-document-generator`
+  → `~/.claude-user-data/…` (if it exists) → `$XDG_DATA_HOME/claude-plugins/…`
+  (if it exists) → `~/.claude-user-data/…`. Data from 0.5.0 and earlier
+  (`~/.claude/plugins-data/…`) is moved by `onboard`.
 
-Tokens in templates (`{author.name}`, `{business.site}`, `{client}`, `{license}`, etc.) are resolved at render time from `profile.yaml` plus any per-invocation prompts.
+Full schema and rendering contract: [`shared/workspace.md`](shared/workspace.md).
+Tokens (`{author.name}`, `{business.site}`, `{client}`, `{license}`, …) resolve at
+render time from `profile.yaml` and per-invocation prompts.
 
 ## Usage
 
@@ -95,29 +107,25 @@ Once onboarded, ask Claude:
 - "Create a personal doc about X"
 - "Start a public writeup on Y, MIT licensed"
 - "Write a client-confidential report for client Acme about Z"
+- "Format this script as a screenplay PDF"
+- "Make this a PDF with my proposal template" (one of yours, via `render`)
 
-Claude picks the right skill, collects any template-specific values (client name, license override, AI disclosure), copies `shared/styles.typ` next to the output, writes the `.typ`, and compiles to PDF.
+Claude picks the right skill, collects any template-specific values (client name, license override, AI disclosure), copies the base file next to the output, writes the `.typ`, and compiles to PDF.
 
-## Adding your own templates
+## Adding your own formats
 
-Either:
+Run `/typst-document-generator:add-profile`, usually after a one-off document
+came out well. It separates the reusable layout from the content and saves it to
+your **overlay** by default: a template YAML, plus a base `.typ` only if the
+existing bases can't express the look. Only a generic layout you choose to
+contribute becomes a built-in in the plugin.
 
-- Re-run `/typst-document-generator:onboard` and choose "Add custom template", or
-- Hand-write a YAML in `~/.claude/plugins-data/typst-document-generator/templates/` following the schema in `shared/workspace.md`.
-
-## Adding a profile
-
-Run `/typst-document-generator:add-profile`. It handles the four edits a profile
-needs — style wrapper, seed YAML, generator skill, README registration — and
-checks the profile does not already exist first.
-
-Most new profiles need no new style code: a new YAML with different
-header/footer/cover values over the existing `doc-base` is enough. Only write a
-new `<name>-base` when the page architecture genuinely differs.
+You can also hand-write a YAML in the overlay's `templates/`, following
+[`shared/workspace.md`](shared/workspace.md).
 
 ## Customising the visual style
 
-`shared/styles.typ` is the only file that meaningfully encodes the visual style (palette, fonts, margins, heading shape, cover layout). Fork and edit that one file if you want a different look — templates don't need to change.
+`shared/styles.typ` is the only file that meaningfully encodes the visual style (palette, fonts, margins, heading shape, cover layout). For a different look, don't fork the plugin: copy `styles.typ` into your overlay's `bases/`, edit it there, and point your templates at it with `base_file:`.
 
 ## Ecosystem toolkit
 

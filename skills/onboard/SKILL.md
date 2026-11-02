@@ -1,108 +1,116 @@
 ---
 name: onboard
-description: First-run onboarding for the typst-document-generator plugin. Interview the user about their identity (name, email, personal site), optional business context (name, site, logo), and default preferences (license, output directory), then seed the template library with the six built-in templates (personal-doc, public-doc, business-doc, client-confidential, personal-confidential, briefing) personalized to the user's answers. Writes everything to ~/.claude/plugins-data/typst-document-generator/. Use this before any other typst-document-generator skill, or when the user says "set up typst templates", "onboard typst", or wants to reset/reseed their templates.
+description: First-run setup for the typst-document-generator plugin. Interviews the user for identity (name, email, site), optional business context (name, site, logo) and defaults, and writes them to the user's private overlay directory, which also holds their own templates. Moves data from the pre-0.6 location if it finds any, and can make the overlay a private git repo. Use before any other typst-document-generator skill, or on "set up typst templates", "onboard typst", "update my typst profile", "where are my typst templates".
 ---
 
 # typst-document-generator: onboard
 
-Establish the persistent profile + template library for this plugin.
-
-Full data-store schema is in `shared/workspace.md` — read it before running.
-
-## When to use
-
-- User says "onboard typst", "set up typst templates", "configure typst-document-generator".
-- Any other skill in this plugin reports `profile.yaml` missing.
-- User wants to reset, reseed, or add a new custom template.
+Set up the user's **private overlay**: `profile.yaml` plus folders for their
+own templates, Typst bases and assets. The plugin stays generic and public.
+Read `shared/workspace.md` first for the layer model and schemas.
 
 ## Prerequisites
 
-- `typst` binary available. Check with `which typst`. If missing, tell the user to install (`cargo install --locked typst-cli` or grab the release from <https://github.com/typst/typst/releases>) and stop.
-- The data-store directory. Create if missing:
-
-  ```bash
-  mkdir -p ~/.claude/plugins-data/typst-document-generator/templates
-  mkdir -p ~/.claude/plugins-data/typst-document-generator/assets
-  ```
+`typst` on the PATH (`which typst`). If it's missing, tell the user how to get
+it (`cargo install --locked typst-cli`, a distro package, or a release from
+<https://github.com/typst/typst/releases>) and stop. Don't install it yourself.
 
 ## Procedure
 
-### 1. Detect existing install
+### 1. Resolve the data dir
 
-Check for `~/.claude/plugins-data/typst-document-generator/profile.yaml`.
+```bash
+"${CLAUDE_PLUGIN_ROOT}/scripts/paths.sh"
+```
 
-- **Exists** — offer three paths:
-  - *Update profile* (overwrite identity/business/defaults; keep templates).
-  - *Add custom template* (skip to step 5).
-  - *Reseed built-in templates* (re-copy the six defaults; confirm overwrite for any that already exist).
-  - *Full reset* (back up existing files with `.bak-YYYYMMDD-HHMMSS` then start fresh).
+Tell the user the directory and the rule that picked it in one line. If they
+want it somewhere else (an existing private repo, a synced folder), tell them
+to set `TYPST_DOCGEN_HOME` in their shell profile, and use that path for this run.
 
-- **Missing** — proceed to step 2.
+### 2. Move legacy data
 
-### 2. Identity interview
+If `paths.sh` printed `legacy_dir:`, there is data from plugin 0.5.0 or earlier
+in `~/.claude/plugins-data/typst-document-generator/`. Offer to move it:
 
-Collect:
+```bash
+mkdir -p "$DATA" && cp -a "$LEGACY"/. "$DATA"/ && mv "$LEGACY" "$LEGACY.moved-$(date +%Y%m%d)"
+```
 
-- `author.name` — full name (required).
-- `author.email` — primary email (required).
-- `author.personal_site` — domain only, no protocol (e.g. `example.com`). Optional but recommended for `public-doc`.
-- `author.public_email` — a separate public-facing email, if they have one. Optional.
-- `date_format` — default `dd-mm-yy`. Only that format is currently supported — just confirm.
+While moving, rename seed copies from old releases: `dsr-business-doc.yaml` →
+`business-doc.yaml`, and `dsr-client-confidential.yaml` →
+`client-confidential.yaml`. Update `name:` inside each file to match. Any
+template file that is byte-identical to the built-in seed of the same name can
+be deleted: the built-in is read directly now. Say what you moved, renamed and
+dropped.
 
-### 3. Business context (optional)
+### 3. Detect existing setup
 
-Ask: "Do you produce documents under a business or brand other than your personal name?"
+If `profile.yaml` exists, offer:
+- *Update profile* (identity, business, defaults; templates untouched).
+- *Add a template* → hand over to `/typst-document-generator:add-profile`.
+- *Customise a built-in*: copy `seeds/templates/<name>.yaml` into `templates/` so the user can edit it. Their copy overrides the built-in from then on.
+- *Full reset*: first back up to `profile.yaml.bak-YYYYMMDD-HHMMSS`.
 
-- **No** — set `business: null`. The `dsr-business-doc` and `dsr-client-confidential` seed templates will be skipped (or generated in a disabled state — ask which).
-- **Yes** — collect:
-  - `business.name`
-  - `business.site` (domain only)
-  - `business.logo_path` — absolute path or `~/…`. Verify the file exists (`ls <path>`). If they don't have one ready, let them skip and fill in later by editing `profile.yaml`.
+Otherwise continue.
 
-### 4. Defaults
+### 4. Identity
 
-- `default_license` — default `MIT`. Common alternatives: `Apache-2.0`, `CC-BY-4.0`, `CC-BY-SA-4.0`, `GPL-3.0`, `All Rights Reserved`.
-- `default_output_dir` — default `null` (ask each time). If the user wants a fixed landing spot (e.g. `~/Documents/typst-output/`), capture it.
+- `author.name`: required.
+- `author.email`: required.
+- `author.personal_site`: domain only, no protocol. Optional, and used by `public-doc`.
+- `author.public_email`: optional.
+- `date_format`: `dd-mm-yy`, the only format supported today. Just confirm it.
 
-### 5. Write `profile.yaml`
+### 5. Business (optional)
 
-Write to `~/.claude/plugins-data/typst-document-generator/profile.yaml` with `captured_at: <today ISO date>`. Schema is in `shared/workspace.md`.
+Ask: "Do you produce documents under a business or brand?"
 
-### 6. Seed built-in templates
+- **No:** `business: null`. `business-doc` and `client-confidential` won't be available.
+- **Yes:** `business.name`, `business.site` (domain only), `business.logo_path`.
+  Copy the logo into `<data dir>/assets/` and store the relative path
+  (`assets/logo.png`), so the overlay is self-contained if it's synced or put in
+  git. If they don't have a logo ready, leave it empty and say they can add it later.
 
-Copy these six template YAMLs from the plugin's install dir (`${CLAUDE_PLUGIN_ROOT}/seeds/templates/` — see note below) into `~/.claude/plugins-data/typst-document-generator/templates/`:
+More than one business: the profile holds one. For a second brand, create a
+template in the overlay that sets its own header and footer values (via
+`add-profile`) rather than a second profile.
 
-- `personal-doc.yaml`
-- `public-doc.yaml`
-- `dsr-business-doc.yaml` (rename to `<business-slug>-business-doc.yaml` if business isn't DSR Holdings; update `name:` inside to match)
-- `dsr-client-confidential.yaml` (same rename logic → `<business-slug>-client-confidential.yaml`)
-- `personal-confidential.yaml`
-- `briefing.yaml`
+### 6. Defaults
 
-If the user said "no business", skip the two business templates.
+- `default_license`: default `MIT`. Alternatives: `Apache-2.0`, `CC-BY-4.0`, `CC-BY-SA-4.0`, `GPL-3.0`, `All Rights Reserved`.
+- `default_output_dir`: default `null` (ask each time).
 
-> **Note on seeds**: this plugin's seed templates live at `seeds/templates/*.yaml` inside the plugin install dir. They contain no personal data — only the structural shape. Token references like `{author.name}` and `{business.site}` resolve at render time from `profile.yaml`.
+### 7. Write
 
-### 7. Optionally collect a first custom template
+```bash
+mkdir -p "$DATA"/{templates,bases,assets}
+```
 
-Ask: "Do you want to define any additional templates now (e.g. a second business, a specific report format)?"
+Write `profile.yaml` with `captured_at: <today, ISO>`. Do **not** copy the
+built-in templates. They're read from the plugin, so they keep getting fixes.
 
-If yes, walk through the template schema (from `shared/workspace.md`) interactively and write `templates/<name>.yaml`.
+### 8. Private and synced (offer once)
 
-### 8. Summary
+If the data dir isn't inside a git work tree (`git -C "$DATA" rev-parse` fails),
+offer to make it one: `git init`, plus a short `README.md` that says what the
+folder is. Don't create a remote or push. If the user wants it on GitHub,
+it must be a **private** repo: it holds their name, email and logo.
 
-Print:
-- Data store path.
-- Profile summary (name, business status, default license).
-- List of templates written.
-- List of sibling skills the user can now invoke (`personal-doc`, `public-doc`, `dsr-business-doc`, `dsr-client-confidential`, `personal-confidential`, `briefing`, plus any custom ones as they're added).
+If it already sits inside a larger repo (a user-data repo), don't init a nested
+one. Mention that commits there should stage this folder explicitly.
 
-## Re-running
+### 9. Summary
 
-Re-running is safe — it always offers the three update paths from step 1 rather than silently overwriting. Always back up existing files with `.bak-<timestamp>` before a full reset.
+- The data dir and the rule that picked it.
+- Profile: name, business (yes/no), default license.
+- Templates available (`paths.sh templates`), marked user or builtin.
+- Entry points: `personal-doc`, `public-doc`, `business-doc`,
+  `client-confidential`, `personal-confidential`, `briefing`, `screenplay`, and
+  `render` for any template (their own included). `add-profile` saves a new format.
 
 ## Tips
 
-- Users with no business can still use `personal-doc`, `public-doc`, `personal-confidential` and `briefing` — the other two require business context.
-- If the user changes their personal site or business name later, a `profile.yaml` edit is enough; no template regeneration needed because templates reference tokens, not literals.
-- Custom template ideas worth suggesting: a "meeting notes" template, a "client pitch" variant with different footer, a "technical RFC" template with dense TOC (`toc-depth: 2`).
+- Changing a site or business name later only needs a `profile.yaml` edit:
+  templates use tokens, not literal values.
+- Template ideas worth suggesting: meeting notes, a client pitch with a different
+  footer, a technical RFC with `toc-depth: 2`.

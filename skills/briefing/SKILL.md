@@ -16,16 +16,16 @@ this produces a sheet to hold in one hand.
 
 ## Preflight
 
-1. Check `~/.claude/plugins-data/typst-document-generator/profile.yaml` exists. If not → tell the user to run `/typst-document-generator:onboard` and stop.
-2. Check `~/.claude/plugins-data/typst-document-generator/templates/briefing.yaml` exists. If not → offer to re-seed from `${CLAUDE_PLUGIN_ROOT}/seeds/templates/briefing.yaml`.
-3. Load profile + template YAML.
+1. Run `"${CLAUDE_PLUGIN_ROOT}/scripts/paths.sh"`. If it reports `profile: missing` → tell the user to run `/typst-document-generator:onboard` and stop.
+2. Load the template from `"${CLAUDE_PLUGIN_ROOT}/scripts/paths.sh" template briefing`. The user's overlay copy wins over the built-in, so use whatever it returns.
+3. Load `profile.yaml` from the data dir and the template YAML. Follow the template's `notes:`.
 
 ## Workflow
 
 1. Ask for: title, optional second title line (`accent_title`), subtitle, and output path (or propose `./{slug}.typ`, honouring `profile.default_output_dir`).
 2. Collect the template `variables:` — `marking` (default `NON-CONFIDENTIAL`), `eyebrow`, and up to four `meta` pairs for the cover strip. All optional; skip the prompt if the user already said it in their request.
 3. Ask if AI-assisted. Default placement for this template is `footer` — the cover is already busy.
-4. Copy `${CLAUDE_PLUGIN_ROOT}/shared/styles.typ` next to the output `.typ`.
+4. Copy `the base file (`styles.typ`; overlay `bases/` first, see `paths.sh bases`)` next to the output `.typ`.
 5. Generate the scaffold:
 
    ```typst

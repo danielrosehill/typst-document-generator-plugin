@@ -11,16 +11,16 @@ Thin renderer — see `shared/workspace.md` for the data-store schema.
 
 ## Preflight
 
-1. `profile.yaml` exists → else prompt onboarding.
-2. `templates/personal-confidential.yaml` exists → else offer to re-seed.
-3. Load profile + template YAML.
+1. Run `"${CLAUDE_PLUGIN_ROOT}/scripts/paths.sh"`. If it reports `profile: missing` → tell the user to run `/typst-document-generator:onboard` and stop.
+2. Load the template from `"${CLAUDE_PLUGIN_ROOT}/scripts/paths.sh" template personal-confidential`. The user's overlay copy wins over the built-in, so use whatever it returns.
+3. Load `profile.yaml` from the data dir and the template YAML. Follow the template's `notes:`.
 
 ## Workflow
 
 1. Ask for: title, optional subtitle, output path.
 2. Default output location: under `~/Documents/` or `~/personal/` (ask which). **Never** a public repo or any synced folder that might be shared.
 3. Ask if AI-assisted. Uncommon for personal-confidential; if yes, default placement: **footer**.
-4. Copy `${CLAUDE_PLUGIN_ROOT}/shared/styles.typ` next to the output `.typ`.
+4. Copy `the base file (`styles.typ`; overlay `bases/` first, see `paths.sh bases`)` next to the output `.typ`.
 5. Generate the `.typ` scaffold:
 
    ```typst

@@ -18,7 +18,7 @@
   link:    rgb("#0369A1"),  // sky-700 — hyperlinks
 )
 
-// Format date as dd-mm-yy (Daniel's preference)
+// Format date as dd-mm-yy (the only format supported today)
 #let format-date(d) = d.display("[day]-[month]-[year repr:last_two]")
 
 // -------------------------------------------------------------------------
@@ -28,7 +28,7 @@
 #let doc-base(
   title: none,
   subtitle: none,
-  author: "Daniel Rosehill",
+  author: none,                      // the skill passes profile author.name
   date: datetime.today(),
   header-left: none,                 // optional string/content for top-left (e.g. "CONFIDENTIAL")
   header-bold: false,                 // render header-left in bold
@@ -38,7 +38,7 @@
   ai-disclosure: none,                // optional content — see ai-disclosure-block()
   ai-disclosure-in-footer: false,     // when true, render disclosure in footer
   show-toc: true,
-  toc-depth: 1,                       // 1 = chapters only (Daniel's default)
+  toc-depth: 1,                       // 1 = chapters only
   body,
 ) = {
   // --- Page setup -------------------------------------------------------
@@ -72,7 +72,7 @@
       line(length: 100%, stroke: 0.4pt + palette.rule)
       v(0.2em)
       let page-num = counter(page).display()
-      let default-line = [Page #page-num · By: #author · #format-date(date)]
+      let default-line = if author != none [Page #page-num · By: #author · #format-date(date)] else [Page #page-num · #format-date(date)]
       let extras = footer-lines.map(l => [#l]).join([ · ])
       let combined = if footer-lines.len() > 0 {
         [#default-line · #extras]
@@ -133,7 +133,7 @@
     line(length: 40%, stroke: 1pt + palette.heading)
     v(0.6em)
     text(size: 10pt, fill: palette.muted)[
-      #author · #format-date(date)
+      #if author != none [#author · ]#format-date(date)
     ]
   }
 

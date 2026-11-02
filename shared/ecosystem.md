@@ -179,7 +179,7 @@ minimal example, and install step into the user's current work.
   folder, adapt. Not consumed by the `use-toolkit` skill as an import; it's a
   **reference for seeding new template YAMLs** in the user's data store.
 - **Notes**: when you find a template worth keeping, consider capturing it
-  as a new YAML in `~/.claude/plugins-data/typst-document-generator/templates/`
+  as a new YAML in `templates/` in the user's overlay (`scripts/paths.sh dir`)
   so it's discoverable via the plugin's generator skills.
 
 ---

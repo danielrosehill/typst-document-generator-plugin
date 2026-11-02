@@ -8,8 +8,10 @@ description: Typeset a screenplay as a PDF with Typst in standard spec-script fo
 Renders through **`shared/screenplay.typ`**, not `styles.typ`. A screenplay is a
 fixed industry format, not a house style: no IBM Plex, no branding, no
 header/footer conventions, no AI-assistance line on the page. No profile or
-onboarding is needed. If `~/.claude/plugins-data/typst-document-generator/profile.yaml`
-exists, offer `author.name` as the default author; otherwise ask.
+onboarding is needed. If `"${CLAUDE_PLUGIN_ROOT}/scripts/paths.sh"` reports a
+profile, offer its `author.name` as the default author; otherwise ask. If the
+user has their own variant in the overlay (`paths.sh bases` shows a user
+`screenplay.typ`), copy that one instead of the built-in.
 
 > **Typst must be installed at a resolvable path (`which typst`). Do not try to install it automatically.**
 
@@ -125,7 +127,7 @@ there.
 ## Step 5: build and render
 
 1. Pick the output path. Propose `./{slug}.typ`, or use `profile.default_output_dir` if it's set.
-2. Copy `${CLAUDE_PLUGIN_ROOT}/shared/screenplay.typ` next to the output `.typ`.
+2. Copy `screenplay.typ` next to the output `.typ`: the overlay copy from `paths.sh bases` if there is one, otherwise `${CLAUDE_PLUGIN_ROOT}/shared/screenplay.typ`.
 3. Write the document:
 
    ```typst

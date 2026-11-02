@@ -1,7 +1,7 @@
 {
   "name": "typst-document-generator",
-  "version": "0.5.0",
-  "description": "Opinionated Typst document templates as a Claude Code plugin. Ships six seed templates (personal, public, business, client-confidential, personal-confidential, briefing) with IBM Plex Sans typography and shared header/footer conventions, plus a standalone screenplay format (Courier 12, industry spec-script layout) that converts scripts from any input format. Identity and templates live in a user data store at ~/.claude/plugins-data/typst-document-generator/, populated via an interactive onboarding skill — no personal data is baked into the plugin.",
+  "version": "0.6.0",
+  "description": "Opinionated Typst document templates as agent skills: personal, public, business, client-confidential, personal-confidential, briefing and a spec-format screenplay. The plugin is generic; your identity, business, logo and your own formats live in a private overlay folder (~/.claude-user-data/typst-document-generator or $TYPST_DOCGEN_HOME) that overrides and extends the built-ins without forking.",
   "author": {
     "name": "Daniel Rosehill",
     "url": "https://github.com/danielrosehill"
@@ -13,7 +13,7 @@
     "document-generation",
     "templates",
     "typography",
-    "personal",
-    "screenplay"
+    "screenplay",
+    "overlay"
   ]
 }

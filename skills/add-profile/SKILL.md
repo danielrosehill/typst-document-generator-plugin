@@ -1,6 +1,6 @@
 ---
 name: add-profile
-description: Promote a one-off Typst document into a reusable named profile in this plugin — generalise the styling into shared/styles.typ, write the seed template YAML and generator skill, verify by rendering, and record any Typst traps hit along the way. Use when a PDF came out well and the user wants that look reusable ("save this as a profile", "I want to reuse this style", "add this to my Typst templates"), or when auditing which profiles already exist before building a new one.
+description: Promote a one-off Typst document into a reusable named format. By default it goes into the user's private overlay (their own template YAML, and a Typst base if the look needs one), so personal and business formats never enter the public plugin. Only a generic look the user wants to share becomes a built-in. Verifies by rendering and records any Typst traps hit along the way. Use when a PDF came out well and the user wants that look reusable ("save this as a profile", "I want to reuse this style", "add this to my Typst templates"), or when auditing which profiles already exist before building a new one.
 ---
 
 # Add a Typst profile
@@ -19,31 +19,40 @@ Profiles are easy to build twice. Before writing anything:
 1. List `${CLAUDE_PLUGIN_ROOT}/seeds/templates/*.yaml` and read the `label` and
    `description` of each.
 2. Read the profile table in the plugin README.
-3. Grep the user's repos for other Typst collections that might already own this
-   look — `dsr-holdings/dsrholdings-typst-templates` is a separate,
-   business-branded collection, and `israel/Hebrew-Letter-Typst-Profile` owns
-   official Hebrew letters. Neither should absorb a personal profile, and this
-   plugin should not absorb theirs.
+3. List the user's overlay: `"${CLAUDE_PLUGIN_ROOT}/scripts/paths.sh" templates`
+   and `paths.sh bases`. Their own formats live there.
 
 If something close already exists, say so and propose **extending it with a
 parameter** rather than adding a near-duplicate. Two profiles that differ only
 by an accent colour is a failure mode, not a library.
 
-## Where each piece goes
+## Decide the layer first
 
-This plugin keeps personal data out of the repo entirely. A profile is four
-edits, and only the first is real work:
+Ask one question: **is this look generic, or is it the user's?**
 
-| Piece | Path | What it holds |
+- **The user's (the default):** anything carrying their name, business, logo,
+  client, colours they consider their brand, or a workflow only they use. It
+  goes in the **overlay**, `<data dir>` from `paths.sh dir`. The plugin isn't
+  touched, and no skill is written: the template's `notes:` carries its
+  instructions, and `/typst-document-generator:render` (or its `triggers:`)
+  picks it up.
+- **Generic, and the user wants to contribute it:** a layout anyone could use
+  with their own profile (a meeting-minutes layout, an invoice skeleton). It
+  goes in the **plugin** as a built-in. This changes a public repo, so confirm first.
+
+| Piece | Overlay (private, default) | Plugin (public built-in) |
 | --- | --- | --- |
-| Style | `shared/styles.typ` | The look. A `<name>-base` wrapper plus its block helpers. |
-| Template | `seeds/templates/<name>.yaml` | Header/footer/cover shape, `variables:` prompts, guidance notes. |
-| Skill | `skills/<name>/SKILL.md` | The thin renderer that collects values and emits the `.typ`. |
-| Registration | `README.md` | The profile table, so it is choosable. |
+| Look | `<data dir>/bases/<name>.typ`, only if `doc-base`/`briefing-base` can't express it | a `<name>-base` in `shared/styles.typ`, or its own `shared/<name>.typ` |
+| Template | `<data dir>/templates/<name>.yaml` with `base_file:`, `notes:`, `triggers:` | `seeds/templates/<name>.yaml` |
+| Skill | none: `render` covers it | `skills/<name>/SKILL.md`, a thin renderer |
+| Registration | nothing | the README profile table |
 
-**Never put a name, address, price or client into any of them.** The plugin
-ships zero personal data; everything resolves at render time from
-`~/.claude/plugins-data/typst-document-generator/`.
+**A built-in never contains a name, address, price, client, logo or brand
+colour.** Those resolve at render time from the overlay.
+
+A user base file should `#import` nothing from the plugin by relative path,
+because the plugin's install path changes on update. Make it self-contained, or
+copy the plugin's `styles.typ` into `bases/` and extend that copy.
 
 ### Reuse the base if you can
 
@@ -54,8 +63,8 @@ concept, a watermark, a body built from something other than headings and
 paragraphs. `briefing-base` earned its own wrapper; a "personal-doc but green"
 would not.
 
-Add a `base: <name>-base` key to the YAML when it is not `doc-base`, so the
-renderer knows which wrapper to import.
+Set `base: <name>-base` (and `base_file:` when it isn't `styles.typ`) in the
+YAML when it isn't `doc-base`, so the renderer knows what to import.
 
 ## What is furniture and what is subject
 
@@ -88,7 +97,7 @@ equivalent in `palette`, so `briefing-palette` is justified.
 A profile that compiles can still be visually broken. Always:
 
 ```bash
-cp shared/styles.typ /tmp/ptest/ && cd /tmp/ptest
+cp <base file> /tmp/ptest/ && cd /tmp/ptest
 typst compile --root . test.typ test.pdf
 pdftoppm -png -r 60 test.pdf page
 ```
@@ -123,15 +132,18 @@ into the plugin README. Known traps, all verified against **Typst 0.14.2**:
 
 ## Finish
 
-Bump the `version` in `.claude-plugin/plugin.json`, commit, and push. This repo
-is **private** and listed in the private marketplace
-(`Claude-Code-Plugins-Private`) — keep it that way; it encodes personal document
-conventions.
+**Overlay:** write the files and render the test. If the data dir is a git repo,
+commit just that folder (stage it explicitly; it may live inside a larger
+user-data repo). Don't push unless that's the user's habit for the repo.
 
-Then tell the user the one thing they have to remember:
+**Built-in:** bump `version` in `.claude-plugin/plugin.json`, then commit and
+push. The plugin is public: check the diff for personal data before committing.
+
+Then tell the user how to use it:
 
 ```
-/typst-document-generator:<name>
+/typst-document-generator:render <name>       # overlay template
+/typst-document-generator:<name>              # built-in with its own skill
 ```
 
 Leave the originating document alone. It already works, and rewriting it through

@@ -12,15 +12,15 @@ store. See `shared/workspace.md` for the full schema.
 
 ## Preflight
 
-1. Check `~/.claude/plugins-data/typst-document-generator/profile.yaml` exists. If not → tell the user to run `/typst-document-generator:onboard` and stop.
-2. Check `~/.claude/plugins-data/typst-document-generator/templates/personal-doc.yaml` exists. If not → offer to re-seed from `${CLAUDE_PLUGIN_ROOT}/seeds/templates/personal-doc.yaml`.
-3. Load profile + template YAML.
+1. Run `"${CLAUDE_PLUGIN_ROOT}/scripts/paths.sh"`. If it reports `profile: missing` → tell the user to run `/typst-document-generator:onboard` and stop.
+2. Load the template from `"${CLAUDE_PLUGIN_ROOT}/scripts/paths.sh" template personal-doc`. The user's overlay copy wins over the built-in, so use whatever it returns.
+3. Load `profile.yaml` from the data dir and the template YAML. Follow the template's `notes:`.
 
 ## Workflow
 
 1. Ask for: title, optional subtitle, output path (or propose `./{slug}.typ` in the cwd, honouring `profile.default_output_dir` if set).
 2. Ask if AI-assisted. If yes, collect tool + role + human work, and placement (default from template: `inline`).
-3. Copy `${CLAUDE_PLUGIN_ROOT}/shared/styles.typ` next to the output `.typ`.
+3. Copy `the base file (`styles.typ`; overlay `bases/` first, see `paths.sh bases`)` next to the output `.typ`.
 4. Generate the `.typ` scaffold with values resolved from profile + answers:
 
    ```typst

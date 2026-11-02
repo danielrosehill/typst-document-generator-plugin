@@ -11,9 +11,9 @@ Thin renderer — see `shared/workspace.md` for the data-store schema.
 
 ## Preflight
 
-1. `~/.claude/plugins-data/typst-document-generator/profile.yaml` exists → else prompt onboarding.
-2. `templates/public-doc.yaml` exists → else offer to re-seed.
-3. Load profile + template YAML.
+1. Run `"${CLAUDE_PLUGIN_ROOT}/scripts/paths.sh"`. If it reports `profile: missing` → tell the user to run `/typst-document-generator:onboard` and stop.
+2. Load the template from `"${CLAUDE_PLUGIN_ROOT}/scripts/paths.sh" template public-doc`. The user's overlay copy wins over the built-in, so use whatever it returns.
+3. Load `profile.yaml` from the data dir and the template YAML. Follow the template's `notes:`.
 4. If `profile.author.personal_site` is empty, tell the user the public-doc footer will look wrong and ask whether to continue or edit profile first.
 
 ## Workflow
@@ -24,7 +24,7 @@ Thin renderer — see `shared/workspace.md` for the data-store schema.
    - Accept user overrides: `Apache-2.0`, `CC-BY-4.0`, `CC-BY-SA-4.0`, `GPL-3.0`, `All Rights Reserved`, etc.
    - If the user says proprietary/unlicensed, use `All Rights Reserved` or omit the license line — ask which.
 3. Ask if AI-assisted. Strongly prefer **inline** placement for public docs (transparency).
-4. Copy `${CLAUDE_PLUGIN_ROOT}/shared/styles.typ` next to the output `.typ`.
+4. Copy `the base file (`styles.typ`; overlay `bases/` first, see `paths.sh bases`)` next to the output `.typ`.
 5. Generate the `.typ` scaffold:
 
    ```typst

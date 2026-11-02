@@ -104,7 +104,7 @@ target. Workflow:
 3. Either:
    - Start a new doc from it (copy the `.typ` files directly), or
    - Capture it as a new template YAML under
-     `~/.claude/plugins-data/typst-document-generator/templates/`
+     `templates/` in the user's overlay (`scripts/paths.sh dir`)
      so it's invocable via this plugin's generator skills in future.
 
 Offer the second option proactively when the user lands on a template worth
