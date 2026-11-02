@@ -27,7 +27,21 @@ A thin rendering layer over Typst that:
 `briefing` is the odd one out: it renders through `briefing-base` rather than
 `doc-base`, and deliberately has no TOC and no chapter page-breaks. It is for
 documents held in one hand in a shop or a car, not read at a desk. Everything
-below applies to the other five.
+below applies to the other five (and not to `screenplay`, below).
+
+## Screenplay (standalone format)
+
+`screenplay` is not a seed template and ignores the shared style entirely. It
+renders through [`shared/screenplay.typ`](shared/screenplay.typ), a skeleton
+that fixes the spec-script conventions: Courier 12 (Courier Prime → Courier New
+→ Courier → Nimbus Mono PS fallback), US Letter (A4 optional), 1.5in/1in
+margins, industry element indents (character 3.7in, parenthetical 3.1in,
+dialogue 2.5in × 3.5in), a 12pt line grid (≈ 1 page per minute), a title page and
+`2.`-style page numbers. The skill prepares the input (Fountain, plain text,
+Markdown, Word/PDF exports, Final Draft `.fdx`, or prose to adapt) into
+`#scene`, `#action`, `#dialogue`, `paren`, `#transition`, `#centered` and `#dual`
+calls, then compiles. It needs no profile. One limit: dialogue blocks never
+split across pages, so there's no `(MORE)`/`(CONT'D)` at page breaks.
 
 All templates share:
 
