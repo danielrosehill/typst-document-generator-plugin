@@ -23,7 +23,7 @@ Uses the `business-doc` template. If the user has several businesses, each with 
 
 1. Ask for: title, optional subtitle, output path.
 2. Ask if AI-assisted. Default placement: **footer** (less intrusive for business docs).
-3. Copy `the base file (`styles.typ`; overlay `bases/` first, see `paths.sh bases`)` and the logo file next to the output `.typ`. Use a local filename (e.g. `./logo.png`) in the scaffold so the output is portable.
+3. Copy the base file (`styles.typ`; overlay `bases/` first, see `paths.sh bases`) and the logo file next to the output `.typ`. Use a local filename (e.g. `./logo.png`) in the scaffold so the output is portable.
 4. Generate the `.typ` scaffold:
 
    ```typst

@@ -24,7 +24,7 @@ Thin renderer — see `shared/workspace.md` for the data-store schema.
    - Accept user overrides: `Apache-2.0`, `CC-BY-4.0`, `CC-BY-SA-4.0`, `GPL-3.0`, `All Rights Reserved`, etc.
    - If the user says proprietary/unlicensed, use `All Rights Reserved` or omit the license line — ask which.
 3. Ask if AI-assisted. Strongly prefer **inline** placement for public docs (transparency).
-4. Copy `the base file (`styles.typ`; overlay `bases/` first, see `paths.sh bases`)` next to the output `.typ`.
+4. Copy the base file (`styles.typ`; overlay `bases/` first, see `paths.sh bases`) next to the output `.typ`.
 5. Generate the `.typ` scaffold:
 
    ```typst

@@ -25,7 +25,7 @@ this produces a sheet to hold in one hand.
 1. Ask for: title, optional second title line (`accent_title`), subtitle, and output path (or propose `./{slug}.typ`, honouring `profile.default_output_dir`).
 2. Collect the template `variables:` — `marking` (default `NON-CONFIDENTIAL`), `eyebrow`, and up to four `meta` pairs for the cover strip. All optional; skip the prompt if the user already said it in their request.
 3. Ask if AI-assisted. Default placement for this template is `footer` — the cover is already busy.
-4. Copy `the base file (`styles.typ`; overlay `bases/` first, see `paths.sh bases`)` next to the output `.typ`.
+4. Copy the base file (`styles.typ`; overlay `bases/` first, see `paths.sh bases`) next to the output `.typ`.
 5. Generate the scaffold:
 
    ```typst

@@ -23,7 +23,7 @@ Uses the `client-confidential` template. If the overlay has more than one client
 1. Gather the **required** `client` variable (the client's name).
 2. Ask for: title, optional subtitle, output path. Default filename: `YYYY-MM-DD-{slug}-confidential.typ` — do NOT include the client name in the filename unless the user asks.
 3. Ask if AI-assisted. If yes, **confirm the client is aware/approves** AI involvement before proceeding. If the client has prohibited AI tools, stop and tell the user this template isn't appropriate.
-4. Copy `the base file (`styles.typ`; overlay `bases/` first, see `paths.sh bases`)` next to the output `.typ`.
+4. Copy the base file (`styles.typ`; overlay `bases/` first, see `paths.sh bases`) next to the output `.typ`.
 5. Generate the `.typ` scaffold:
 
    ```typst

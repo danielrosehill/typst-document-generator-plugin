@@ -20,7 +20,7 @@ store. See `shared/workspace.md` for the full schema.
 
 1. Ask for: title, optional subtitle, output path (or propose `./{slug}.typ` in the cwd, honouring `profile.default_output_dir` if set).
 2. Ask if AI-assisted. If yes, collect tool + role + human work, and placement (default from template: `inline`).
-3. Copy `the base file (`styles.typ`; overlay `bases/` first, see `paths.sh bases`)` next to the output `.typ`.
+3. Copy the base file (`styles.typ`; overlay `bases/` first, see `paths.sh bases`) next to the output `.typ`.
 4. Generate the `.typ` scaffold with values resolved from profile + answers:
 
    ```typst

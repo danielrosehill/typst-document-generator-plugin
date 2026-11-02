@@ -20,7 +20,7 @@ Thin renderer — see `shared/workspace.md` for the data-store schema.
 1. Ask for: title, optional subtitle, output path.
 2. Default output location: under `~/Documents/` or `~/personal/` (ask which). **Never** a public repo or any synced folder that might be shared.
 3. Ask if AI-assisted. Uncommon for personal-confidential; if yes, default placement: **footer**.
-4. Copy `the base file (`styles.typ`; overlay `bases/` first, see `paths.sh bases`)` next to the output `.typ`.
+4. Copy the base file (`styles.typ`; overlay `bases/` first, see `paths.sh bases`) next to the output `.typ`.
 5. Generate the `.typ` scaffold:
 
    ```typst
