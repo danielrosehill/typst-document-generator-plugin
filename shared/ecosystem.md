@@ -100,7 +100,7 @@ minimal example, and install step into the user's current work.
   theory), state machines, flowcharts, mind maps. Grid-based placement,
   curved/straight arrows, labels.
 - **Reach for it when**: the user needs a precise vector diagram in the
-  document itself (not a raster image). Much better than `nano-tech-diagrams`
+  document itself (not a raster image). Much better than `tech-comms-diagrams`
   for anything structural where exactness matters.
 - **Install**:
 
@@ -125,7 +125,7 @@ minimal example, and install step into the user's current work.
 
 - **Notes**: diagrams render inline in the compiled PDF. Great for
   academic-style documents. For more organic, illustrated diagrams, stick
-  with `nano-tech-diagrams`.
+  with `tech-comms-diagrams`.
 
 ---
 
@@ -227,7 +227,7 @@ minimal example, and install step into the user's current work.
 | Slide deck, themed/animated | touying |
 | Vector diagram (nodes, arrows, structure) | fletcher |
 | Scientific chart (scatter, line, bar) | lilaq |
-| Organic / illustrated diagram | nano-tech-diagrams MCP (outside Typst) |
+| Organic / illustrated diagram | tech-comms-diagrams plugin (outside Typst) |
 | Formal letter / CV / invoice / paper | typst/templates |
 | Batch / programmatic rendering | typst-py |
 

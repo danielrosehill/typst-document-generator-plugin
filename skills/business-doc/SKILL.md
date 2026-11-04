@@ -53,6 +53,6 @@ Uses the `business-doc` template. If the user has several businesses, each with 
 
 - Formal but slightly creative — don't over-correct toward bland corporate.
 - Use real Typst tables for pricing, scope, or comparison matrices.
-- For diagrams, use the `nano-tech-diagrams` MCP.
+- For diagrams, use the `tech-comms-diagrams` plugin.
 - No boilerplate legal text in the main body unless asked.
 - For slides, structural diagrams, charts, or non-document formats, see `shared/ecosystem.md` or invoke `/typst-document-generator:use-toolkit`.

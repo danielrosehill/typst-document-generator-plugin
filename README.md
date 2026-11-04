@@ -145,7 +145,7 @@ wires it into the current document.
 
 ## Related
 
-- `nano-tech-diagrams` MCP (NanoBanana 2 via Fal) pairs well with these templates for illustrated/organic technical diagrams (vs. fletcher's exact structural ones).
+- `tech-comms-diagrams` plugin pairs well with these templates for illustrated/organic technical diagrams (vs. fletcher's exact structural ones).
 
 ## License
 

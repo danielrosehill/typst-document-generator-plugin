@@ -31,11 +31,11 @@ Map the request to one category:
 | chart, plot, graph, figure | **lilaq** |
 | letter, CV, invoice, academic paper, any non-doc form factor | **typst/templates** |
 | script, pipeline, batch, Python, automation | **typst-py** |
-| illustrated/organic diagram | **nano-tech-diagrams MCP** (outside Typst) — redirect |
+| illustrated/organic diagram | **tech-comms-diagrams plugin** (outside Typst) — redirect |
 
-If ambiguous (e.g. "a diagram" — fletcher or nano-tech?), ask: "structural
+If ambiguous (e.g. "a diagram" — fletcher or tech-comms-diagrams?), ask: "structural
 and exact (fletcher, renders in the PDF) or illustrative and organic
-(nano-tech-diagrams, rendered to image)?"
+(tech-comms-diagrams, rendered to image)?"
 
 ### 2. Confirm version
 

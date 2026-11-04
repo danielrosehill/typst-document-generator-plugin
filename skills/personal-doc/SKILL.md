@@ -45,6 +45,6 @@ store. See `shared/workspace.md` for the full schema.
 
 - Chapters (`=`) auto page-break. Don't over-nest — stop at `==` unless the doc is >30 pages.
 - Prefer real Typst tables over ASCII for tabular data.
-- For technical diagrams, recommend the `nano-tech-diagrams` MCP (NanoBanana 2 via Fal).
+- For technical diagrams, recommend the `tech-comms-diagrams` plugin.
 - Don't add per-section dates, version numbers, or revision stamps unless asked.
 - For slides, structural diagrams, charts, or non-document formats, see `shared/ecosystem.md` or invoke `/typst-document-generator:use-toolkit`.

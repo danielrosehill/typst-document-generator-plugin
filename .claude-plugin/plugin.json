@@ -1,6 +1,6 @@
 {
   "name": "typst-document-generator",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Opinionated Typst document templates as agent skills: personal, public, business, client-confidential, personal-confidential, briefing and a spec-format screenplay. The plugin is generic; your identity, business, logo and your own formats live in a private overlay folder (~/.claude-user-data/typst-document-generator or $TYPST_DOCGEN_HOME) that overrides and extends the built-ins without forking.",
   "author": {
     "name": "Daniel Rosehill",
